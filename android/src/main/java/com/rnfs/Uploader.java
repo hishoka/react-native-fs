@@ -118,17 +118,14 @@ public class Uploader extends AsyncTask<UploadParams, int[], UploadResult> {
             if (!binaryStreamOnly) {
                 long requestLength = totalFileLength;
                 requestLength += stringData.length() + files.length * crlf.length();
-                //Temporary remove Content-length
-                // connection.setRequestProperty("Content-length", "" +(int) requestLength);
-                // connection.setFixedLengthStreamingMode((int)requestLength);
+                connection.setRequestProperty("Content-length", "" +(int) requestLength);
+                connection.setFixedLengthStreamingMode((int)requestLength);
             }
             connection.connect();
 
             request = new DataOutputStream(connection.getOutputStream());
             if (!binaryStreamOnly) {
-                //fix chinese encode problem
-                request.write(metaData.getBytes());
-                // request.writeBytes(metaData);
+                request.writeBytes(metaData);
             }
 
             byteSentTotal = 0;
